@@ -8,9 +8,23 @@ const SEEDREAM_API_URL = "https://ark.cn-beijing.volces.com/api/v3/images/genera
 
 export async function POST(req: NextRequest) {
   // Check if API is configured
-  if (!SEEDREAM_API_KEY || !SEEDREAM_MODEL_ID) {
+  const apiKey = process.env.SEEDREAM_API_KEY;
+  const modelId = process.env.SEEDREAM_MODEL_ID;
+  
+  console.log("DEBUG: API Key exists:", !!apiKey, "length:", apiKey?.length);
+  console.log("DEBUG: Model ID exists:", !!modelId, "length:", modelId?.length);
+  
+  if (!apiKey || !modelId) {
     return NextResponse.json(
-      { error: "Seedream API not configured. Please set SEEDREAM_API_KEY and SEEDREAM_MODEL_ID environment variables." },
+      { 
+        error: "Seedream API not configured. Please set SEEDREAM_API_KEY and SEEDREAM_MODEL_ID environment variables.",
+        debug: {
+          hasApiKey: !!apiKey,
+          apiKeyLength: apiKey?.length || 0,
+          hasModelId: !!modelId,
+          modelIdLength: modelId?.length || 0,
+        }
+      },
       { status: 503 }
     );
   }
